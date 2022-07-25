@@ -29,8 +29,6 @@ public class Bashekim extends User{
 		ArrayList<User> list=new ArrayList<>();
 		User obj;
 
-		
-		
 		try {	
 			st=con.createStatement();
 			rs=st.executeQuery("SELECT * FROM user WHERE type='doktor'");
@@ -51,7 +49,7 @@ public class Bashekim extends User{
 		boolean key=false;
 		try {
 			String query = "INSERT INTO user " + "(tcno,password,name,type) VALUES" + "(?,?,?,?)";
-			st=con.createStatement();
+			//st=con.createStatement();
 			preparedStatement= con.prepareStatement(query);
 			preparedStatement.setString(1, tcNo);
 			preparedStatement.setString(2, passw);
@@ -83,6 +81,27 @@ public boolean deleteDoctor(int id)	 throws SQLException {
 			return true;
 		else return false;
 	}
+public boolean updateDoctor(int id,String tcno,String password,String name)	 throws SQLException {
+	
+	boolean key=false;
+	try {
+		String query = "UPDATE user SET name = ?, tcno = ? , password = ? WHERE id = ? ";
+		st=con.createStatement();
+		preparedStatement= con.prepareStatement(query);
+		preparedStatement.setString(1, name);
+		preparedStatement.setString(2, tcno);
+		preparedStatement.setString(3, password);
+		preparedStatement.setInt(4, id);
+		preparedStatement.executeUpdate();
+		key=true;
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+	if (key)
+		return true;
+	else return false;
+}
 	
 	
 	}
