@@ -17,6 +17,7 @@ import org.mariadb.jdbc.type.Point;
 import org.w3c.dom.events.MouseEvent;
 
 import Helper.Helper;
+import Helper.Item;
 import Model.Bashekim;
 
 import java.awt.Color;
@@ -39,6 +40,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.ActionEvent;
 import Model.Clinic;
+import javax.swing.JComboBox;
 
 public class BashekimGUI extends JFrame {
 static Bashekim bashekim = new Bashekim();
@@ -56,6 +58,7 @@ private DefaultTableModel clinicModel;
 private Object[] clinicData;
 private JPopupMenu clinicMenu;
 Clinic clinic=new Clinic(); 
+private JTable table_worker;
 	/**
 	 * Launch the application.
 	 */
@@ -106,8 +109,13 @@ Clinic clinic=new Clinic();
 			clinicModel.addRow(clinicData);
 			
 		}
-		
-		
+		//WorkerModel
+		DefaultTableModel workerModel=new DefaultTableModel();
+		Object [] colWorker=new Object[2];
+		colWorker[0]="ID";
+		colWorker[1]="Ad Soyad";
+		workerModel.setColumnIdentifiers(colWorker);
+		Object[] workerData= new Object[2];
 		
 		setTitle("Hastane Yönetim Sistemi");
 		setResizable(false);
@@ -450,14 +458,103 @@ Clinic clinic=new Clinic();
 				}
 			}
 		});
-		btn_addClinic.setBounds(267, 73, 168, 25);
+		btn_addClinic.setBounds(267, 73, 168, 32);
 		w_clinic.add(btn_addClinic);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(456, 11, 233, 353);
-		w_clinic.add(scrollPane);
+		JScrollPane w_scrollWorker = new JScrollPane();
+		w_scrollWorker.setBounds(456, 11, 233, 353);
+		w_clinic.add(w_scrollWorker);
+		
+		table_worker = new JTable();
+		w_scrollWorker.setViewportView(table_worker);
+		
+		JComboBox select_doctor = new JComboBox();
+		select_doctor.setBounds(267, 285, 168, 32);
+		for(int i=0;i<bashekim.getDoctorList().size();i++) {
+			select_doctor.addItem(new Item(bashekim.getDoctorList().get(i).getId(),bashekim.getDoctorList().get(i).getName()));
+		
+		}
+		select_doctor.addActionListener(e -> {
+			JComboBox c=(JComboBox) e.getSource();
+			Item item=(Item) c.getSelectedItem();
+			System.out.println(item.getKey()+" : "+item.getValue()); 
+			}
+		);
+		w_clinic.add(select_doctor);
+		
+		JButton btn_addWorker = new JButton("Ekle");
+		btn_addWorker.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selRow=table_clinic.getSelectedRow();
+				if(selRow>=0) {
+						String selClinic = table_clinic.getModel().getValueAt(selRow, 0).toString();
+						int selClinicID= Integer.parseInt(selClinic);
+						Item doctorItem = (Item) select_doctor.getSelectedItem();
+						try {
+							boolean control = bashekim.addWorker(doctorItem.getKey(), selClinicID);
+							if(control) {
+								Helper.showMsg("success");
+								DefaultTableModel clearModel= (DefaultTableModel) table_worker.getModel();
+								clearModel.setRowCount(0);
+								for(int i=0;i<bashekim.getClinicDoctorList(selClinicID).size();i++) {
+									workerData[0]=bashekim.getClinicDoctorList(selClinicID).get(i).getId();
+									workerData[1]=bashekim.getClinicDoctorList(selClinicID).get(i).getName();
+									workerModel.addRow(workerData);
+									table_worker.setModel(workerModel);
+								}
+							}
+							else {
+								Helper.showMsg("error");
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				}
+				else {
+					Helper.showMsg("Lütfen Bir Poliklinik seçiniz !");
+				}
+			}
+		});
+		btn_addWorker.setBounds(267, 328, 168, 36);
+		w_clinic.add(btn_addWorker);
+		
+		JLabel lblNewLabel_1_4_1 = new JLabel("Poliklinik Ad\u0131");
+		lblNewLabel_1_4_1.setBounds(267, 162, 168, 25);
+		w_clinic.add(lblNewLabel_1_4_1);
+		
+		JButton btn_workerSelect = new JButton("Se\u00E7");
+		btn_workerSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int selRow=table_clinic.getSelectedRow();
+					if(selRow>=0) {
+						String selClinic=table_clinic.getModel().getValueAt(selRow, 0).toString();
+						int selClinicID=Integer.parseInt(selClinic);
+						DefaultTableModel clearModel= (DefaultTableModel) table_worker.getModel();
+						clearModel.setRowCount(0);
+						
+						try {
+							for(int i=0;i<bashekim.getClinicDoctorList(selClinicID).size();i++) {
+								workerData[0]=bashekim.getClinicDoctorList(selClinicID).get(i).getId();
+								workerData[1]=bashekim.getClinicDoctorList(selClinicID).get(i).getName();
+								workerModel.addRow(workerData);
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						table_worker.setModel(workerModel);
+					}
+					else {
+						Helper.showMsg("Lütfen Bir Poliklinik Seçiniz !");
+					}
+			}
+		});
+		btn_workerSelect.setBounds(267, 184, 168, 32);
+		w_clinic.add(btn_workerSelect);
 	}
-	
+
 	public void updateDoctorModel() throws SQLException {
 		DefaultTableModel clearModel=(DefaultTableModel) table_doctor.getModel();
 		clearModel.setRowCount(0);
@@ -482,9 +579,4 @@ Clinic clinic=new Clinic();
 		}
 		
 	}
-	
-	
-	
-	
-	
 }
