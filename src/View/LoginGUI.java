@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import Helper.*;
 import Model.Bashekim;
+import Model.Doctor;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -147,16 +148,30 @@ public class LoginGUI extends JFrame {
 						Statement st= con.createStatement();
 						ResultSet rs = st.executeQuery("SELECT * FROM user");
 						while(rs.next()) {
-							if(fld_doctorTC.getText().equals(rs.getString("tcno"))&&fld_doctorPassw.getText().equals(rs.getString("password")));
-							Bashekim bhekim= new Bashekim();
-							bhekim.setId(rs.getInt("id"));
-							bhekim.setPassword("password");
-							bhekim.setTcno(rs.getString("tcno"));
-							bhekim.setName(rs.getString("name"));
-							bhekim.setType(rs.getString("type"));
-							BashekimGUI bGUI = new BashekimGUI(bhekim);
-							bGUI.setVisible(true);
-							dispose();
+							if(fld_doctorTC.getText().equals(rs.getString("tcno"))&&fld_doctorPassw.getText().equals(rs.getString("password"))){
+							if(rs.getString("type").equals("bashekim")) {
+								Bashekim bhekim= new Bashekim();
+								bhekim.setId(rs.getInt("id"));
+								bhekim.setPassword("password");
+								bhekim.setTcno(rs.getString("tcno"));
+								bhekim.setName(rs.getString("name"));
+								bhekim.setType(rs.getString("type"));
+								BashekimGUI bGUI = new BashekimGUI(bhekim);
+								bGUI.setVisible(true);
+								dispose();
+							}
+							if(rs.getString("type").equals("doktor")) {
+								Doctor doctor=new Doctor();
+								doctor.setId(rs.getInt("id"));
+								doctor.setPassword("password");
+								doctor.setTcno(rs.getString("tcno"));
+								doctor.setName(rs.getString("name"));
+								doctor.setType(rs.getString("type"));
+								DoctorGUI dGUI= new DoctorGUI(doctor);
+								dGUI.setVisible(true);
+								dispose();
+							}
+							}
 						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
