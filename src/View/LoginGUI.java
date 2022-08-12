@@ -104,6 +104,13 @@ public class LoginGUI extends JFrame {
 		fld_hastaTC.setColumns(10);
 		
 		JButton btn_register = new JButton("Kay\u0131t Ol");
+		btn_register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterGUI registerGUI=new RegisterGUI();
+				registerGUI.setVisible(true);
+				dispose();
+			}
+		});
 		btn_register.setBounds(31, 101, 158, 36);
 		w_hastaLogin.add(btn_register);
 		
