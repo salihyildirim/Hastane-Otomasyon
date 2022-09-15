@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import Helper.Helper;
+
 public class Hasta extends User {
 
 	Statement st=null;
@@ -29,7 +31,7 @@ public class Hasta extends User {
 					"SELECT * FROM user WHERE tcno = "+tcno);
 			while(rs.next()) {
 				count++;
-				System.out.println("artti");
+				Helper.showMsg("Girilen TC numarasýna ait bir kayýt bulunmaktadýr !");
 			}
 			
 			if(count==0) {
