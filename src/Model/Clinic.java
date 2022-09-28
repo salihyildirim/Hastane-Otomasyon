@@ -31,7 +31,7 @@ public class Clinic {
 		return id;
 	}
 	public void setId(int id) {
-		this.id = id;
+		this.id = id;	
 	}
 	public String getName() {
 		return name;
@@ -58,7 +58,7 @@ public ArrayList<Clinic> getList() throws SQLException{
 			
 		}
 		catch(SQLException e) {e.printStackTrace();}
-		finally {
+		finally {	
 			st.close();
 			rs.close();
 			con.close();
@@ -129,6 +129,26 @@ public ArrayList<Clinic> getList() throws SQLException{
 		
 		return c;
 	}
+	public ArrayList<User> getClinicDoctorList(int clinic_id) throws SQLException{	
+		
+		ArrayList<User> list=new ArrayList<>();
+		User obj;
+		Connection con=conn.connDb();
+
+		try {	
+			st=con.createStatement();
+			rs=st.executeQuery("SELECT u.id,u.tcno,u.type,u.name,u.password FROM worker w LEFT JOIN user u ON w.user_id = u.id WHERE clinic_id ="+clinic_id);
+			while(rs.next()) {
+				obj=new User(rs.getInt("u.id"),rs.getString("u.tcno"),rs.getString("u.name"),rs.getString("u.password"),rs.getString("u.type"));
+				list.add(obj);
+			}
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+
+		}
 		
 }
 

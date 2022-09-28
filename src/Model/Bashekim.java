@@ -83,7 +83,7 @@ public boolean deleteDoctor(int id)	 throws SQLException {
 	}
 public boolean updateDoctor(int id,String tcno,String password,String name)	 throws SQLException {
 	
-	boolean key=false;
+	boolean key=false;	
 	try {
 		String query = "UPDATE user SET name = ?, tcno = ? , password = ? WHERE id = ? ";
 		st=con.createStatement();

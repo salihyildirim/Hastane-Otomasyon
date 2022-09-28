@@ -404,7 +404,7 @@ private JTable table_worker;
 				
 				
 			}
-
+			
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent e) {
 				// TODO Auto-generated method stub
