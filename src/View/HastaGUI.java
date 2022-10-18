@@ -10,9 +10,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.xml.transform.Templates;
 
+import Helper.Helper;
 import Helper.Item;
 import Model.Clinic;
 import Model.Hasta;
+import Model.Whour;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -37,6 +39,12 @@ public class HastaGUI extends JFrame {
 	private JTable table_doctor;
 	private DefaultTableModel doctorModel;
 	private Object [] doctorData=null;
+	private JTable table_whour;
+	private Whour whour=new Whour();
+	private DefaultTableModel whourModel;
+	private Object [] whourData=null;
+	private int selectDoctorID=0;
+	private String selectDoctorName=null;
 	/**
 	 * Launch the application.
 	 */
@@ -65,6 +73,14 @@ public class HastaGUI extends JFrame {
 		colDoctor[1]="Ad Soyad";
 		doctorModel.setColumnIdentifiers(colDoctor);
 		doctorData= new Object[2];
+		
+		whourModel = new DefaultTableModel();
+		Object[] colWhour=new Object[2];
+		colWhour[0]="ID";	
+		colWhour[1]="Tarih";
+		whourModel.setColumnIdentifiers(colWhour);
+		whourData= new Object[2];
+		
 		
 		
 		setResizable(false);
@@ -97,7 +113,7 @@ public class HastaGUI extends JFrame {
 		w_appointment.setLayout(null);
 		
 		JScrollPane w_scrollDoctor = new JScrollPane();
-		w_scrollDoctor.setBounds(10, 44, 261, 320);
+		w_scrollDoctor.setBounds(10, 44, 245, 320);
 		w_appointment.add(w_scrollDoctor);
 		
 		table_doctor = new JTable(doctorModel);
@@ -105,14 +121,14 @@ public class HastaGUI extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("Doktor Listesi");
 		lblNewLabel_1.setBounds(10, 22, 101, 20);
-		w_appointment.add(lblNewLabel_1);
+		w_appointment.add(lblNewLabel_1);	
 		
 		JLabel lblNewLabel_1_4 = new JLabel("Poliklinik Ad\u0131");
-		lblNewLabel_1_4.setBounds(281, 22, 168, 25);
+		lblNewLabel_1_4.setBounds(265, 20, 168, 25);
 		w_appointment.add(lblNewLabel_1_4);
 		
 		JComboBox select_clinic = new JComboBox();
-		select_clinic.setBounds(281, 44, 150, 33);
+		select_clinic.setBounds(265, 47, 150, 33);
 		select_clinic.addItem("Poliklinik Seç");
 		for(int i=0;i<clinic.getList().size();i++)
 		{
@@ -142,6 +158,8 @@ public class HastaGUI extends JFrame {
 					
 					
 					}
+				else {DefaultTableModel clearModel= (DefaultTableModel) table_doctor.getModel();
+				clearModel.setRowCount(0);}
 				
 			}
 			
@@ -149,5 +167,97 @@ public class HastaGUI extends JFrame {
 		
 		
 		w_appointment.add(select_clinic);
+		
+		JLabel lblNewLabel_1_4_1 = new JLabel("Doktor Se\u00E7");
+		lblNewLabel_1_4_1.setBounds(265, 142, 150, 25);
+		w_appointment.add(lblNewLabel_1_4_1);
+		
+		JButton btn_selDoctor = new JButton("Se\u00E7");
+		btn_selDoctor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row=table_doctor.getSelectedRow();
+				if(row>=0) {
+					String value=table_doctor.getValueAt(row, 0).toString();
+					int id=Integer.parseInt(value);
+					DefaultTableModel clearModel= (DefaultTableModel) table_whour.getModel();
+					clearModel.setRowCount(0);
+					
+					try {
+						for(int i=0; i<whour.getWhourList(id).size();i++) {
+							whourData[0]=whour.getWhourList(id).get(i).getId();
+							whourData[1]=whour.getWhourList(id).get(i).getWdate();
+							whourModel.addRow(whourData);
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				table_whour.setModel(whourModel);
+				selectDoctorID=(int) table_doctor.getValueAt(row, 0);	
+				selectDoctorName=(String) table_doctor.getValueAt(row,1);
+				
+				
+				}else {
+					Helper.showMsg("Lütfen Bir Doktor Seçiniz !");
+				}
+				
+				
+			}
+		});
+		btn_selDoctor.setBounds(265, 162, 168, 32);
+		w_appointment.add(btn_selDoctor);
+		
+		JScrollPane w_scrollWhour = new JScrollPane();
+		w_scrollWhour.setBounds(443, 44, 246, 320);
+		w_appointment.add(w_scrollWhour);
+		
+		table_whour = new JTable(whourModel);
+		w_scrollWhour.setViewportView(table_whour);
+		
+		JLabel lblNewLabel_1_4_1_1 = new JLabel("Randevu Al");
+		lblNewLabel_1_4_1_1.setBounds(265, 247, 150, 25);
+		w_appointment.add(lblNewLabel_1_4_1_1);
+		
+		JButton btn_addAppoint = new JButton("Se\u00E7");
+		btn_addAppoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selRow=table_whour.getSelectedRow();
+				if(selRow>=0) {
+					String date=table_whour.getValueAt(selRow, 1).toString();
+					try {
+						boolean control=hasta.addAppointment(selectDoctorID, hasta.getId(), date);
+						if(control) {
+							Helper.showMsg("success");
+							hasta.updateWhourStatus(selectDoctorID, date);
+							updateWhourModel(selectDoctorID);
+						}	else {Helper.showMsg("error");	
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else {
+					Helper.showMsg("GEÇERLÝ BÝR TARÝH SEÇÝNÝZ");
+				}
+			}
+		});
+		btn_addAppoint.setBounds(265, 267, 168, 32);
+		w_appointment.add(btn_addAppoint);
+		table_whour.getColumnModel().getColumn(0).setPreferredWidth(5);
+	}
+	public void updateWhourModel(int doctor_id) throws SQLException { 
+		DefaultTableModel clearModel=(DefaultTableModel) table_whour.getModel();
+		clearModel.setRowCount(0); 
+		for(int i=0; i<whour.getWhourList(doctor_id).size();i++) {
+			whourData[0]=whour.getWhourList(doctor_id).get(i).getId();
+			whourData[1]=whour.getWhourList(doctor_id).get(i).getWdate();
+			whourModel.addRow(whourData);
+		}
+		
 	}
 }
+
+
+
+

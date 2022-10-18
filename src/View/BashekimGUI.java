@@ -511,7 +511,7 @@ private JTable table_worker;
 							e1.printStackTrace();
 						}
 				}
-				else {
+				else {	
 					Helper.showMsg("Lütfen Bir Poliklinik seçiniz !");
 				}
 			}

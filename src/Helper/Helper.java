@@ -12,7 +12,7 @@ public class Helper {
 		UIManager.put("OptionPane.yesButtonText", "Evet");
 	}
 	
-	public static void showMsg(String str) {
+	public static void showMsg(String str) {	
 		
 		String msg;
 		switch(str) {

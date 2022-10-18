@@ -39,7 +39,7 @@ public class UpdateClinicGUI extends JFrame {
 		});
 	}
 
-	/**
+	/**	
 	 * Create the frame.
 	 */
 	public UpdateClinicGUI(Clinic clinic) {

@@ -161,7 +161,7 @@ public class DoctorGUI extends JFrame {
 					int selID=Integer.parseInt((table_whour.getValueAt(selectRow, 0)).toString()); 
 					boolean control;
 					try {
-						control = doctor.deleteWhour(selID);
+						control = doctor.deleteWhour(selID);	
 						if(control) {
 							Helper.showMsg("success");
 							updateWhourModel(doctor);

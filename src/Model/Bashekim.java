@@ -15,7 +15,7 @@ public class Bashekim extends User{
 	Statement st=null;
 	ResultSet rs=null;
 	Connection con=conn.connDb();
-	PreparedStatement preparedStatement;
+	PreparedStatement preparedStatement;	
 	
 	public Bashekim(int id, String tcno, String name, String password, String type) {
 		super(id, tcno, name, password, type);

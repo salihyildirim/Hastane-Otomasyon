@@ -11,7 +11,7 @@ import Helper.DbConnection;
 
 public class Clinic {
 	
-	private int id;
+	private int id;	
 	private String name;
 	
 	DbConnection conn=new DbConnection();

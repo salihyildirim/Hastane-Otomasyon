@@ -5,7 +5,7 @@ public class DbConnection {
 	Connection connect;
 	
 	public DbConnection() {}	
-	
+		
 	public Connection connDb() {
 		try {
 			this.connect=DriverManager.getConnection("jdbc:mariadb://localhost:3306/hospital?user=root&password=123456");

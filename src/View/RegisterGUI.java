@@ -94,7 +94,7 @@ private Hasta hasta=new Hasta();
 						if(control) {
 							Helper.showMsg("success");
 							LoginGUI loginGUI=new LoginGUI();
-							loginGUI.setVisible(true);
+							loginGUI.setVisible(true);	
 							dispose();
 						}
 						else {

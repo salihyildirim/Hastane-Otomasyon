@@ -59,7 +59,7 @@ public ArrayList<Whour> getWhourList(int doctor_id) throws SQLException{
 		
 		try {	
 			st=con.createStatement();
-			rs=st.executeQuery("SELECT * FROM whour WHERE status='a' AND doctor_id ="+doctor_id);
+			rs=st.executeQuery("SELECT * FROM whour WHERE status='a' AND doctor_id ="+doctor_id);	
 			while(rs.next()) {
 				obj=new Whour(); 
 				obj.setId(rs.getInt("id"));
