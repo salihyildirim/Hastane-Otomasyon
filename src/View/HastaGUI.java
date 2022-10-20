@@ -12,6 +12,7 @@ import javax.xml.transform.Templates;
 
 import Helper.Helper;
 import Helper.Item;
+import Model.Appointment;
 import Model.Clinic;
 import Model.Hasta;
 import Model.Whour;
@@ -45,6 +46,11 @@ public class HastaGUI extends JFrame {
 	private Object [] whourData=null;
 	private int selectDoctorID=0;
 	private String selectDoctorName=null;
+	private JTable table_appoint;
+	private DefaultTableModel appointModel;
+	private Object [] appointData=null;
+	private Appointment appoint=new Appointment();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -81,6 +87,19 @@ public class HastaGUI extends JFrame {
 		whourModel.setColumnIdentifiers(colWhour);
 		whourData= new Object[2];
 		
+		appointModel = new DefaultTableModel();
+		Object[] colAppoint=new Object[2];
+		colAppoint[0]="ID";	
+		colAppoint[1]="Tarih";
+		appointModel.setColumnIdentifiers(colAppoint);
+		appointData= new Object[2];
+		for(int i=0;i<appoint.getHastaList(hasta.getId()).size(); i++)
+		{
+			appointData[0]=appoint.getHastaList(hasta.getId()).get(i).getId();
+			appointData[1]=appoint.getHastaList(hasta.getId()).get(i).getAppDate();
+			appointModel.addRow(appointData);
+			
+		}
 		
 		
 		setResizable(false);
@@ -218,7 +237,7 @@ public class HastaGUI extends JFrame {
 		lblNewLabel_1_4_1_1.setBounds(265, 247, 150, 25);
 		w_appointment.add(lblNewLabel_1_4_1_1);
 		
-		JButton btn_addAppoint = new JButton("Se\u00E7");
+		JButton btn_addAppoint = new JButton("Se\u00E7");	
 		btn_addAppoint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selRow=table_whour.getSelectedRow();
@@ -230,6 +249,7 @@ public class HastaGUI extends JFrame {
 							Helper.showMsg("success");
 							hasta.updateWhourStatus(selectDoctorID, date);
 							updateWhourModel(selectDoctorID);
+							updateAppointModel(hasta.getId());
 						}	else {Helper.showMsg("error");	
 						}
 					} catch (SQLException e1) {
@@ -244,6 +264,18 @@ public class HastaGUI extends JFrame {
 		});
 		btn_addAppoint.setBounds(265, 267, 168, 32);
 		w_appointment.add(btn_addAppoint);
+		
+		JPanel w_appoint = new JPanel();
+		w_appoint.setBackground(Color.WHITE);
+		w_tab.addTab("Randevularým", null, w_appoint, null);
+		w_appoint.setLayout(null);
+		
+		JScrollPane w_scrollAppoint = new JScrollPane();
+		w_scrollAppoint.setBounds(10, 11, 679, 353);
+		w_appoint.add(w_scrollAppoint);
+		
+		table_appoint = new JTable(appointModel);
+		w_scrollAppoint.setViewportView(table_appoint);
 		table_whour.getColumnModel().getColumn(0).setPreferredWidth(5);
 	}
 	public void updateWhourModel(int doctor_id) throws SQLException { 
@@ -252,7 +284,18 @@ public class HastaGUI extends JFrame {
 		for(int i=0; i<whour.getWhourList(doctor_id).size();i++) {
 			whourData[0]=whour.getWhourList(doctor_id).get(i).getId();
 			whourData[1]=whour.getWhourList(doctor_id).get(i).getWdate();
-			whourModel.addRow(whourData);
+			whourModel.addRow(whourData);	
+		}
+		
+	}
+	public void updateAppointModel(int hasta_id) throws SQLException { 
+		DefaultTableModel clearModel=(DefaultTableModel) table_appoint.getModel();
+		clearModel.setRowCount(0); 
+		for(int i=0;i<appoint.getHastaList(hasta.getId()).size(); i++)
+		{
+			appointData[0]=appoint.getHastaList(hasta.getId()).get(i).getId();
+			appointData[1]=appoint.getHastaList(hasta.getId()).get(i).getAppDate();
+			
 		}
 		
 	}

@@ -76,7 +76,9 @@ public ArrayList<Appointment> getHastaList(int hasta_id) throws SQLException{
 				obj=new Appointment();
 				obj.setId(rs.getInt("id"));
 				obj.setDoctorID(rs.getInt("doctor_id")); 
-				list.add(obj);
+				obj.setHastaID(rs.getInt("hasta_id")); 
+				obj.setAppDate(rs.getString("app_date"));
+				list.add(obj); 
 			}	
 			
 		}
@@ -90,4 +92,34 @@ public ArrayList<Appointment> getHastaList(int hasta_id) throws SQLException{
 		return list;
 	
 		}
+
+public ArrayList<Appointment> getDoctorList(int doctor_id) throws SQLException{	
+	
+	ArrayList<Appointment> list=new ArrayList<>();
+	Appointment obj;
+	Connection con=conn.connDb();
+	try {
+		
+		st=con.createStatement();
+		rs=st.executeQuery("SELECT * FROM appointment WHERE doctor_id =" + doctor_id);
+		while(rs.next())	{
+			obj=new Appointment();
+			obj.setId(rs.getInt("id"));
+			obj.setDoctorID(rs.getInt("doctor_id")); 
+			obj.setHastaID(rs.getInt("hasta_id")); 
+			obj.setAppDate(rs.getString("app_date"));
+			list.add(obj); 
+		}	
+		
+	}
+	catch(SQLException e) {e.printStackTrace();}
+	finally {	
+		st.close();
+		rs.close();
+		con.close();
+	}
+	
+	return list;
+
+	}
 }

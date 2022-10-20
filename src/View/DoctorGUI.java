@@ -184,6 +184,13 @@ public class DoctorGUI extends JFrame {
 		w_whour.add(btn_deleteWhour);
 		
 		JButton btnNewButton = new JButton("Çýkýþ Yap");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginGUI login=new LoginGUI();
+				login.setVisible(true);
+				dispose();
+			}
+		});
 		btnNewButton.setFont(new Font("Calibri", Font.PLAIN, 14));
 		btnNewButton.setBounds(607, 10, 117, 27);
 		w_pane.add(btnNewButton);
